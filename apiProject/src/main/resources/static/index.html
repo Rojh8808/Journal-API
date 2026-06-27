@@ -3,740 +3,120 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Journal Manager Dashboard</title>
+    <title>Journal App - REST Client</title>
 
-    <!-- Google Fonts & Icons -->
+    <!-- External Fonts & Icons -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <style>
-        /* Developer Design Tokens */
-        :root {
-            --bg-color: #0b0f19;
-            --panel-bg: #161e2e;
-            --panel-hover: #1f293d;
-            --border-color: #2a3447;
-            --accent-color: #6366f1;
-            --accent-hover: #4f46e5;
-            --text-main: #f3f4f6;
-            --text-muted: #9ca3af;
-            --danger-color: #ef4444;
-            --danger-hover: #dc2626;
-            --success-color: #10b981;
-            --warning-color: #f59e0b;
-            --border-radius: 10px;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
-        }
-
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            min-height: 100vh;
-            padding: 2.5rem 1rem;
-        }
-
-        .container {
-            max-width: 1080px;
-            margin: 0 auto;
-        }
-
-        /* Top Header */
-        header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding-bottom: 1.5rem;
-            margin-bottom: 2rem;
-            border-bottom: 1px solid var(--border-color);
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-
-        .brand-section {
-            display: flex;
-            align-items: center;
-            gap: 0.85rem;
-        }
-
-        .brand-badge {
-            background: linear-gradient(135deg, var(--accent-color), #818cf8);
-            color: #fff;
-            width: 44px;
-            height: 44px;
-            border-radius: var(--border-radius);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.25rem;
-            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
-        }
-
-        .brand-section h1 {
-            font-size: 1.45rem;
-            font-weight: 700;
-            letter-spacing: -0.02em;
-        }
-
-        .brand-section p {
-            font-size: 0.825rem;
-            color: var(--text-muted);
-        }
-
-        .endpoint-bar {
-            display: flex;
-            align-items: center;
-            gap: 0.6rem;
-            background: var(--panel-bg);
-            padding: 0.5rem 0.9rem;
-            border-radius: var(--border-radius);
-            border: 1px solid var(--border-color);
-            font-size: 0.85rem;
-        }
-
-        .endpoint-bar input {
-            background: transparent;
-            border: none;
-            color: var(--accent-color);
-            font-weight: 600;
-            outline: none;
-            width: 210px;
-        }
-
-        .connection-status {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.35rem;
-            padding: 0.2rem 0.55rem;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            background: rgba(255, 255, 255, 0.04);
-        }
-
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background-color: var(--warning-color);
-        }
-
-        .status-dot.online { background-color: var(--success-color); }
-        .status-dot.offline { background-color: var(--danger-color); }
-
-        /* Dashboard Layout Grid */
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: 360px 1fr;
-            gap: 1.75rem;
-        }
-
-        @media (max-width: 850px) {
-            .dashboard-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        /* Card Panels */
-        .card-panel {
-            background: var(--panel-bg);
-            border: 1px solid var(--border-color);
-            border-radius: var(--border-radius);
-            padding: 1.5rem;
-        }
-
-        .panel-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 1.25rem;
-        }
-
-        .panel-title {
-            font-size: 1.1rem;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        /* Form Inputs */
-        .form-field {
-            margin-bottom: 1.1rem;
-        }
-
-        .form-field label {
-            display: block;
-            font-size: 0.85rem;
-            font-weight: 500;
-            color: var(--text-muted);
-            margin-bottom: 0.4rem;
-        }
-
-        .input-control {
-            width: 100%;
-            padding: 0.7rem 0.9rem;
-            background: var(--bg-color);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            color: var(--text-main);
-            font-size: 0.9rem;
-            outline: none;
-            transition: border-color 0.2s;
-        }
-
-        .input-control:focus {
-            border-color: var(--accent-color);
-        }
-
-        textarea.input-control {
-            min-height: 120px;
-            resize: vertical;
-        }
-
-        /* Buttons */
-        .action-row {
-            display: flex;
-            gap: 0.5rem;
-            margin-top: 1.25rem;
-        }
-
-        .btn {
-            padding: 0.65rem 1.2rem;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 0.875rem;
-            cursor: pointer;
-            border: none;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.4rem;
-            transition: all 0.2s;
-        }
-
-        .btn:active {
-            transform: scale(0.98);
-        }
-
-        .btn-primary {
-            background: var(--accent-color);
-            color: #fff;
-            flex: 1;
-        }
-
-        .btn-primary:hover {
-            background: var(--accent-hover);
-        }
-
-        .btn-secondary {
-            background: rgba(255, 255, 255, 0.06);
-            color: var(--text-main);
-            border: 1px solid var(--border-color);
-        }
-
-        .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.12);
-        }
-
-        .btn-danger {
-            background: var(--danger-color);
-            color: #fff;
-        }
-
-        .btn-danger:hover {
-            background: var(--danger-hover);
-        }
-
-        .btn-icon {
-            padding: 0.45rem;
-            width: 34px;
-            height: 34px;
-            border-radius: 6px;
-            font-size: 0.825rem;
-        }
-
-        .btn-edit {
-            background: rgba(99, 102, 241, 0.1);
-            color: var(--accent-color);
-        }
-
-        .btn-edit:hover {
-            background: var(--accent-color);
-            color: #fff;
-        }
-
-        .btn-delete {
-            background: rgba(239, 68, 68, 0.1);
-            color: var(--danger-color);
-        }
-
-        .btn-delete:hover {
-            background: var(--danger-color);
-            color: #fff;
-        }
-
-        /* Journal Feed */
-        .feed-controls {
-            margin-bottom: 1.25rem;
-        }
-
-        .entry-feed {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            max-height: 520px;
-            overflow-y: auto;
-            padding-right: 0.25rem;
-        }
-
-        .entry-card {
-            background: rgba(11, 15, 25, 0.6);
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            padding: 1.1rem 1.25rem;
-            transition: border-color 0.2s;
-        }
-
-        .entry-card:hover {
-            border-color: rgba(99, 102, 241, 0.4);
-        }
-
-        .card-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 0.5rem;
-        }
-
-        .card-title {
-            font-size: 1.05rem;
-            font-weight: 600;
-            color: var(--text-main);
-        }
-
-        .card-id {
-            font-size: 0.7rem;
-            font-family: monospace;
-            color: var(--text-muted);
-            background: rgba(255, 255, 255, 0.04);
-            padding: 0.15rem 0.45rem;
-            border-radius: 4px;
-            margin-bottom: 0.35rem;
-            display: inline-block;
-            cursor: pointer;
-        }
-
-        .card-id:hover {
-            color: var(--accent-color);
-        }
-
-        .card-body {
-            font-size: 0.9rem;
-            color: #d1d5db;
-            line-height: 1.5;
-            white-space: pre-wrap;
-        }
-
-        .empty-feed {
-            text-align: center;
-            padding: 3rem 1rem;
-            color: var(--text-muted);
-        }
-
-        .empty-feed i {
-            font-size: 2.5rem;
-            margin-bottom: 0.75rem;
-            opacity: 0.4;
-        }
-
-        /* Toast & Modal System */
-        .toast-container {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 999;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .toast {
-            background: var(--panel-bg);
-            border: 1px solid var(--border-color);
-            color: var(--text-main);
-            padding: 0.75rem 1rem;
-            border-radius: 8px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
-            display: flex;
-            align-items: center;
-            gap: 0.6rem;
-            font-size: 0.875rem;
-            animation: slideUp 0.25s ease-out;
-        }
-
-        .toast.success { border-left: 4px solid var(--success-color); }
-        .toast.error { border-left: 4px solid var(--danger-color); }
-        .toast.info { border-left: 4px solid var(--accent-color); }
-
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(12px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .modal-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.75);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.2s;
-        }
-
-        .modal-overlay.active {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        .modal-box {
-            background: var(--panel-bg);
-            border: 1px solid var(--border-color);
-            border-radius: var(--border-radius);
-            padding: 1.75rem;
-            width: 90%;
-            max-width: 400px;
-            text-align: center;
-        }
-
-        .modal-box h3 {
-            margin-bottom: 0.5rem;
-            font-size: 1.2rem;
-        }
-
-        .modal-box p {
-            font-size: 0.875rem;
-            color: var(--text-muted);
-            margin-bottom: 1.5rem;
-        }
-    </style>
+    
+    <!-- External Stylesheet -->
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
     <div class="container">
         <!-- Header -->
         <header>
-            <div class="brand-section">
-                <div class="brand-badge"><i class="fa-solid fa-book-bookmark"></i></div>
+            <div class="brand">
+                <div class="brand-icon">
+                    <i class="fa-solid fa-book-bookmark"></i>
+                </div>
                 <div>
-                    <h1>Journal App</h1>
-                    <p>Spring Boot & MongoDB REST Dashboard</p>
+                    <h1 class="brand-title">Journal App</h1>
+                    <p class="brand-subtitle">Spring Boot & MongoDB Client</p>
                 </div>
             </div>
 
-            <div class="endpoint-bar">
-                <span class="connection-status">
+            <div class="api-bar">
+                <span class="status-indicator">
                     <span id="statusDot" class="status-dot"></span>
                     <span id="statusText">Connecting</span>
                 </span>
                 <input type="text" id="apiUrl" value="http://localhost:8080/journal" placeholder="API Endpoint">
-                <button class="btn btn-secondary btn-icon" onclick="fetchEntries()" title="Refresh Feed">
-                    <i class="fa-solid fa-rotate-right"></i>
+                <button class="btn btn-secondary btn-sm" onclick="loadJournals()" title="Refresh">
+                    <i class="fa-solid fa-rotate"></i>
                 </button>
             </div>
         </header>
 
-        <!-- Main Dashboard Grid -->
-        <div class="dashboard-grid">
+        <!-- Main Layout -->
+        <main class="main-layout">
             
-            <!-- Left: Form Panel -->
-            <div class="card-panel">
-                <div class="panel-header">
-                    <h2 id="formTitle" class="panel-title">
-                        <i class="fa-solid fa-plus-circle"></i> Create Entry
+            <!-- Form Panel -->
+            <section class="card">
+                <div class="card-header">
+                    <h2 id="formTitle" class="card-title">
+                        <i class="fa-solid fa-pen-to-square"></i> New Entry
                     </h2>
                 </div>
 
-                <form id="journalForm" onsubmit="handleSave(event)">
-                    <input type="hidden" id="entryId">
+                <form id="journalForm" onsubmit="handleFormSubmit(event)">
+                    <input type="hidden" id="journalId">
 
-                    <div class="form-field">
+                    <div class="form-group">
                         <label for="title">Title</label>
-                        <input type="text" id="title" class="input-control" placeholder="Enter title..." required>
+                        <input type="text" id="title" class="form-control" placeholder="Entry title..." required>
                     </div>
 
-                    <div class="form-field">
+                    <div class="form-group">
                         <label for="content">Content</label>
-                        <textarea id="content" class="input-control" placeholder="Write entry details here..." required></textarea>
+                        <textarea id="content" class="form-control" placeholder="Write journal details..." required></textarea>
                     </div>
 
-                    <div class="action-row">
-                        <button type="submit" id="saveBtn" class="btn btn-primary">
-                            <i class="fa-solid fa-floppy-disk"></i> Save Entry
+                    <div class="btn-group">
+                        <button type="submit" id="submitBtn" class="btn btn-primary">
+                            <i class="fa-solid fa-plus"></i> Save Entry
                         </button>
                         <button type="button" id="cancelBtn" class="btn btn-secondary" onclick="resetForm()" style="display: none;">
                             Cancel
                         </button>
                     </div>
                 </form>
-            </div>
+            </section>
 
-            <!-- Right: Feed Panel -->
-            <div class="card-panel">
-                <div class="panel-header">
-                    <h2 class="panel-title">
+            <!-- Feed Panel -->
+            <section class="card">
+                <div class="card-header">
+                    <h2 class="card-title">
                         <i class="fa-solid fa-layer-group"></i> Journal Entries
                     </h2>
-                    <span id="entryCounter" style="color: var(--text-muted); font-size: 0.85rem;">0 entries</span>
+                    <span id="entryCount" style="color: var(--text-muted); font-size: 0.85rem;">0 entries</span>
                 </div>
 
-                <div class="feed-controls">
-                    <input type="text" id="searchBox" class="input-control" placeholder="Search by title or content..." oninput="filterEntries()">
+                <div class="feed-search">
+                    <input type="text" id="searchBox" class="form-control" placeholder="Search entries..." oninput="filterJournals()">
                 </div>
 
-                <div id="entryFeed" class="entry-feed">
-                    <div class="empty-feed">
+                <div id="journalFeed" class="entry-list">
+                    <div class="empty-state">
                         <i class="fa-solid fa-spinner fa-spin"></i>
-                        <p>Loading entries from server...</p>
+                        <p>Loading entries...</p>
                     </div>
                 </div>
-            </div>
+            </section>
 
-        </div>
+        </main>
     </div>
 
     <!-- Toast Notifications -->
     <div id="toastContainer" class="toast-container"></div>
 
-    <!-- Delete Modal -->
-    <div id="deleteModal" class="modal-overlay">
-        <div class="modal-box">
-            <i class="fa-solid fa-trash-can" style="font-size: 2.25rem; color: var(--danger-color); margin-bottom: 0.85rem;"></i>
-            <h3>Delete Journal Entry?</h3>
-            <p>Are you sure you want to remove this journal entry? This action cannot be undone.</p>
-            <div class="action-row">
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteModal" class="modal-backdrop">
+        <div class="modal-card">
+            <i class="fa-solid fa-trash-can" style="font-size: 2rem; color: var(--danger); margin-bottom: 0.75rem;"></i>
+            <h4>Delete Journal Entry?</h4>
+            <p>Are you sure you want to delete this entry? This action cannot be undone.</p>
+            <div class="btn-group">
                 <button class="btn btn-secondary" onclick="closeDeleteModal()">Cancel</button>
-                <button id="confirmDeleteBtn" class="btn btn-danger">Confirm Delete</button>
+                <button class="btn btn-danger" onclick="confirmDelete()">Delete</button>
             </div>
         </div>
     </div>
 
     <!-- Application Script -->
-    <script>
-        let cachedEntries = [];
-        let pendingDeleteId = null;
-
-        const getApiUrl = () => document.getElementById('apiUrl').value.trim();
-
-        document.addEventListener('DOMContentLoaded', () => {
-            fetchEntries();
-        });
-
-        // Update Server Status Indicator
-        function setStatus(isOnline) {
-            const dot = document.getElementById('statusDot');
-            const text = document.getElementById('statusText');
-            dot.className = isOnline ? 'status-dot online' : 'status-dot offline';
-            text.innerText = isOnline ? 'Connected' : 'Offline';
-        }
-
-        // GET: Fetch all entries
-        async function fetchEntries() {
-            const feed = document.getElementById('entryFeed');
-            const url = getApiUrl();
-
-            try {
-                const response = await fetch(url);
-                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-                
-                cachedEntries = await response.json();
-                setStatus(true);
-                renderFeed(cachedEntries);
-            } catch (err) {
-                console.error('Fetch error:', err);
-                setStatus(false);
-                feed.innerHTML = `
-                    <div class="empty-feed">
-                        <i class="fa-solid fa-triangle-exclamation" style="color: var(--danger-color);"></i>
-                        <p style="color: var(--danger-color); font-weight: 600;">API Connection Failed</p>
-                        <p style="font-size: 0.8rem; margin-top: 0.25rem;">Ensure Spring Boot is active at ${escapeHtml(url)}</p>
-                    </div>
-                `;
-                document.getElementById('entryCounter').innerText = '0 entries';
-            }
-        }
-
-        // Render Cards
-        function renderFeed(entries) {
-            const feed = document.getElementById('entryFeed');
-            document.getElementById('entryCounter').innerText = `${entries.length} entries`;
-
-            if (entries.length === 0) {
-                feed.innerHTML = `
-                    <div class="empty-feed">
-                        <i class="fa-solid fa-box-open"></i>
-                        <p>No journal entries found.</p>
-                    </div>
-                `;
-                return;
-            }
-
-            feed.innerHTML = entries.map(item => `
-                <div class="entry-card">
-                    <div class="card-top">
-                        <div>
-                            <span class="card-id" onclick="copyId('${item.id}')" title="Copy ID">
-                                #${item.id || 'N/A'}
-                            </span>
-                            <h3 class="card-title">${escapeHtml(item.title)}</h3>
-                        </div>
-                        <div style="display:flex; gap:0.35rem;">
-                            <button class="btn btn-icon btn-edit" onclick="editEntry('${item.id}')" title="Edit">
-                                <i class="fa-solid fa-pen-to-square"></i>
-                            </button>
-                            <button class="btn btn-icon btn-delete" onclick="openDeleteModal('${item.id}')" title="Delete">
-                                <i class="fa-solid fa-trash-can"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="card-body">${escapeHtml(item.content)}</div>
-                </div>
-            `).join('');
-        }
-
-        // Search Filter
-        function filterEntries() {
-            const query = document.getElementById('searchBox').value.toLowerCase();
-            const filtered = cachedEntries.filter(e => 
-                (e.title && e.title.toLowerCase().includes(query)) ||
-                (e.content && e.content.toLowerCase().includes(query))
-            );
-            renderFeed(filtered);
-        }
-
-        // Save (POST / PUT)
-        async function handleSave(event) {
-            event.preventDefault();
-            const id = document.getElementById('entryId').value;
-            const title = document.getElementById('title').value.trim();
-            const content = document.getElementById('content').value.trim();
-
-            if (!title || !content) return;
-
-            const url = id ? `${getApiUrl()}/id/${id}` : getApiUrl();
-            const method = id ? 'PUT' : 'POST';
-
-            try {
-                const response = await fetch(url, {
-                    method: method,
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ title, content })
-                });
-
-                if (response.ok) {
-                    showToast(id ? 'Entry updated successfully' : 'Journal entry created', 'success');
-                    resetForm();
-                    fetchEntries();
-                } else {
-                    showToast('Failed to save entry', 'error');
-                }
-            } catch (err) {
-                showToast('Network error while saving', 'error');
-            }
-        }
-
-        // Edit Form Populate
-        function editEntry(id) {
-            const item = cachedEntries.find(e => e.id === id);
-            if (!item) return;
-
-            document.getElementById('entryId').value = item.id;
-            document.getElementById('title').value = item.title;
-            document.getElementById('content').value = item.content;
-
-            document.getElementById('formTitle').innerHTML = '<i class="fa-solid fa-pen-to-square"></i> Edit Entry';
-            document.getElementById('saveBtn').innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Update Entry';
-            document.getElementById('cancelBtn').style.display = 'inline-flex';
-        }
-
-        // Reset Form
-        function resetForm() {
-            document.getElementById('journalForm').reset();
-            document.getElementById('entryId').value = '';
-            document.getElementById('formTitle').innerHTML = '<i class="fa-solid fa-plus-circle"></i> Create Entry';
-            document.getElementById('saveBtn').innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Save Entry';
-            document.getElementById('cancelBtn').style.display = 'none';
-        }
-
-        // Delete Modal & Execution
-        function openDeleteModal(id) {
-            pendingDeleteId = id;
-            document.getElementById('deleteModal').classList.add('active');
-            document.getElementById('confirmDeleteBtn').onclick = () => executeDelete();
-        }
-
-        function closeDeleteModal() {
-            document.getElementById('deleteModal').classList.remove('active');
-            pendingDeleteId = null;
-        }
-
-        async function executeDelete() {
-            const idToDelete = pendingDeleteId;
-            closeDeleteModal();
-
-            if (!idToDelete) return;
-
-            try {
-                const response = await fetch(`${getApiUrl()}/id/${idToDelete}`, { method: 'DELETE' });
-                if (response.ok) {
-                    showToast('Journal entry deleted', 'success');
-                    fetchEntries();
-                } else {
-                    showToast('Failed to delete entry', 'error');
-                }
-            } catch (err) {
-                showToast('Network error while deleting', 'error');
-            }
-        }
-
-        // Clipboard Helper
-        function copyId(text) {
-            navigator.clipboard.writeText(text);
-            showToast(`Copied ID: ${text}`, 'info');
-        }
-
-        // Toast Helper
-        function showToast(message, type = 'info') {
-            const container = document.getElementById('toastContainer');
-            const toast = document.createElement('div');
-            toast.className = `toast ${type}`;
-            
-            let icon = 'fa-info-circle';
-            if (type === 'success') icon = 'fa-check-circle';
-            if (type === 'error') icon = 'fa-circle-exclamation';
-
-            toast.innerHTML = `<i class="fa-solid ${icon}"></i> <span>${escapeHtml(message)}</span>`;
-            container.appendChild(toast);
-
-            setTimeout(() => {
-                toast.style.opacity = '0';
-                setTimeout(() => toast.remove(), 250);
-            }, 2800);
-        }
-
-        function escapeHtml(str) {
-            return str ? str.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m])) : '';
-        }
-    </script>
+    <script src="app.js"></script>
 </body>
 </html>
