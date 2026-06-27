@@ -1,6 +1,6 @@
 # Journal REST API
 
-A lightweight RESTful web application built with Java, Spring Boot, and MongoDB for managing personal journal entries. This project provides full CRUD functionality along with an integrated dashboard frontend interface.
+A RESTful web application built with Spring Boot and MongoDB for managing personal journal entries. Includes an integrated single-page dashboard for interactive CRUD management.
 
 ## Team Members
 - **Rojh Khadka**
@@ -11,76 +11,76 @@ A lightweight RESTful web application built with Java, Spring Boot, and MongoDB 
 
 ---
 
-## API Reference
+## REST Endpoints
 
-The backend exposes standard REST endpoints under the `/journal` route:
+The backend exposes the following API routes under `/journal`:
 
-| Method | Endpoint | Description | Request Body / Parameters |
-| shadow | -------- | ----------- | ------------------------- |
+| Method | Endpoint | Description | Request Payload / Params |
+| ------ | -------- | ----------- | ------------------------ |
 | `GET` | `/journal` | Fetch all journal entries | None |
-| `GET` | `/journal/id/{id}` | Fetch a single journal by ID | Path variable: `id` |
-| `POST` | `/journal` | Create a new journal entry | JSON: `{ "title": "...", "content": "..." }` |
-| `PUT` | `/journal/id/{id}` | Update an existing journal entry | Path variable: `id`, JSON: `{ "title": "...", "content": "..." }` |
-| `DELETE` | `/journal/id/{id}` | Delete a journal entry | Path variable: `id` |
+| `GET` | `/journal/id/{id}` | Fetch entry by ID | Path variable: `id` |
+| `POST` | `/journal` | Create a new entry | JSON: `{ "title": "...", "content": "..." }` |
+| `PUT` | `/journal/id/{id}` | Update existing entry | Path variable: `id`, JSON: `{ "title": "...", "content": "..." }` |
+| `DELETE` | `/journal/id/{id}` | Delete an entry | Path variable: `id` |
 
 ---
 
 ## Tech Stack
 
-- **Java** (JDK 17)
-- **Spring Boot** (REST Controller, Dependency Injection)
-- **Spring Data MongoDB** (Document Persistence)
-- **MongoDB** (NoSQL Database)
-- **HTML5 / CSS3 / Vanilla JavaScript** (Frontend Dashboard)
-- **Maven** (Build Tool)
+- **Backend**: Java 17, Spring Boot, Spring Data MongoDB
+- **Database**: MongoDB (Local instance on port `27017`)
+- **Frontend**: HTML5, CSS3, Vanilla JavaScript (Modular architecture)
+- **Build Tool**: Maven
 
 ---
 
-## Project Structure
+## Project Directory Structure
 
 ```text
 apiProject/
 ├── src/
 │   ├── main/
 │   │   ├── java/com/pgs/apiProject/
-│   │   │   ├── controller/      # REST API Controllers (JournalController)
-│   │   │   ├── entity/          # MongoDB Document Models (Journal)
-│   │   │   ├── repository/      # Spring Data Repositories (JournalRepository)
-│   │   │   └── service/         # Business Logic Layer (JournalService)
+│   │   │   ├── controller/      # REST Controllers (JournalController)
+│   │   │   ├── entity/          # Mongo Document Entity (Journal)
+│   │   │   ├── repository/      # Mongo Repository (JournalRepository)
+│   │   │   └── service/         # Service Layer (JournalService)
 │   │   └── resources/
-│   │       ├── static/          # Web frontend (index.html)
+│   │       ├── static/          # Web Client (index.html, style.css, app.js)
 │   │       └── application.properties
-├── index.html                   # Standalone dashboard client
-├── pom.xml                      # Maven dependencies
+├── index.html                   # Dashboard Markup
+├── style.css                    # Dashboard Styles
+├── app.js                       # Frontend Application Logic
+├── pom.xml                      # Dependencies
 └── README.md
 ```
 
 ---
 
-## Getting Started
+## Setup & Running Locally
 
 ### Prerequisites
-- Java Development Kit (JDK 17 or higher)
-- MongoDB running locally on port `27017`
+- JDK 17 or higher installed
+- Local MongoDB running on port `27017`
 
-### Running the Application
+### Execution Steps
 
-1. Clone the repository and navigate to the project directory:
+1. Clone the repository and move into the project folder:
    ```bash
    git clone <repository-url>
    cd apiProject/apiProject
    ```
 
-2. Start the Spring Boot application:
-   - On Linux/macOS:
-     ```bash
-     ./mvnw spring-boot:run
-     ```
-   - On Windows:
+2. Run the Spring Boot application using Maven wrapper:
+   - **Windows**:
      ```cmd
      mvnw.cmd spring-boot:run
      ```
+   - **macOS / Linux**:
+     ```bash
+     ./mvnw spring-boot:run
+     ```
 
-3. Access the application:
-   - **Web Dashboard**: Open `http://localhost:8080/` in your browser.
-   - **API Base URL**: `http://localhost:8080/journal`
+3. Open your browser and navigate to:
+   - **Web App**: `http://localhost:8080/`
+   - **REST API**: `http://localhost:8080/journal`
