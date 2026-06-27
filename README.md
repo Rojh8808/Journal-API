@@ -5,6 +5,7 @@
 ---
 
 ## 👥 Team Members
+- Rojh Khadka
 - Bijaya Hayu
 - Saurav Nyapuane
 - Rikesh Shrestha
